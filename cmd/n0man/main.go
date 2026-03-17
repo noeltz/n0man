@@ -26,10 +26,8 @@ func main() {
 		cancel() // Signal all operations to stop
 
 		// Give operations time to cleanup (max 5 seconds)
-		select {
-		case <-time.After(5 * time.Second):
-			os.Exit(130) // Standard exit code for SIGINT
-		}
+		<-time.After(5 * time.Second)
+		os.Exit(130) // Standard exit code for SIGINT
 	}()
 
 	// Pass context to commands

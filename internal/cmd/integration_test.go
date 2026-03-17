@@ -18,8 +18,12 @@ func TestAddListRmFlow(t *testing.T) {
 	configHome := filepath.Join(tempDir, "config_home")
 	cfgDir := filepath.Join(configHome, "n0man")
 	storeDir := filepath.Join(tempDir, "store")
-	os.MkdirAll(cfgDir, 0755)
-	os.MkdirAll(storeDir, 0755)
+	if err := os.MkdirAll(cfgDir, 0755); err != nil {
+		t.Fatalf("Failed to create config dir: %v", err)
+	}
+	if err := os.MkdirAll(storeDir, 0755); err != nil {
+		t.Fatalf("Failed to create store dir: %v", err)
+	}
 
 	cfgPath := filepath.Join(cfgDir, "n0man.toml")
 	cfg := config.DefaultConfig()
@@ -27,12 +31,30 @@ func TestAddListRmFlow(t *testing.T) {
 	_ = cfg.Save(cfgPath)
 
 	// Mock XDG paths to point to temp dir
-	os.Setenv("XDG_CONFIG_HOME", configHome)
-	defer os.Unsetenv("XDG_CONFIG_HOME")
-	os.Setenv("XDG_DATA_HOME", storeDir)
-	defer os.Unsetenv("XDG_DATA_HOME")
-	os.Setenv("HOME", tempDir)
-	defer os.Unsetenv("HOME")
+	if err := os.Setenv("XDG_CONFIG_HOME", configHome); err != nil {
+		t.Fatalf("Failed to set XDG_CONFIG_HOME: %v", err)
+	}
+	defer func() {
+		if err := os.Unsetenv("XDG_CONFIG_HOME"); err != nil {
+			t.Logf("Failed to unset XDG_CONFIG_HOME: %v", err)
+		}
+	}()
+	if err := os.Setenv("XDG_DATA_HOME", storeDir); err != nil {
+		t.Fatalf("Failed to set XDG_DATA_HOME: %v", err)
+	}
+	defer func() {
+		if err := os.Unsetenv("XDG_DATA_HOME"); err != nil {
+			t.Logf("Failed to unset XDG_DATA_HOME: %v", err)
+		}
+	}()
+	if err := os.Setenv("HOME", tempDir); err != nil {
+		t.Fatalf("Failed to set HOME: %v", err)
+	}
+	defer func() {
+		if err := os.Unsetenv("HOME"); err != nil {
+			t.Logf("Failed to unset HOME: %v", err)
+		}
+	}()
 
 	// Set testing flag so we don't accidentally trash real dotfiles
 	// (Go's testing framework doesn't have a reliable `os.UserConfigDir` mock out of box
@@ -40,7 +62,9 @@ func TestAddListRmFlow(t *testing.T) {
 
 	// Create a dummy file to add
 	dummyFilePath := filepath.Join(tempDir, "dummy.txt")
-	os.WriteFile(dummyFilePath, []byte("dummy file content"), 0644)
+	if err := os.WriteFile(dummyFilePath, []byte("dummy file content"), 0644); err != nil {
+		t.Fatalf("Failed to create dummy file: %v", err)
+	}
 
 	// 2. Add
 	rootCmd.SetArgs([]string{"add", dummyFilePath})

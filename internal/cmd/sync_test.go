@@ -15,8 +15,12 @@ func TestSyncLocalChanges(t *testing.T) {
 
 	cfgDir := filepath.Join(tempDir, "config_home", "n0man")
 	storeDir := filepath.Join(tempDir, "store")
-	os.MkdirAll(cfgDir, 0755)
-	os.MkdirAll(storeDir, 0755)
+	if err := os.MkdirAll(cfgDir, 0755); err != nil {
+		t.Fatalf("Failed to create config dir: %v", err)
+	}
+	if err := os.MkdirAll(storeDir, 0755); err != nil {
+		t.Fatalf("Failed to create store dir: %v", err)
+	}
 
 	cfgPath := filepath.Join(cfgDir, "n0man.toml")
 	cfg := config.DefaultConfig()
@@ -24,8 +28,14 @@ func TestSyncLocalChanges(t *testing.T) {
 	// Note: No remote URL set for this test
 	_ = cfg.Save(cfgPath)
 
-	os.Setenv("XDG_CONFIG_HOME", filepath.Dir(cfgDir))
-	defer os.Unsetenv("XDG_CONFIG_HOME")
+	if err := os.Setenv("XDG_CONFIG_HOME", filepath.Dir(cfgDir)); err != nil {
+		t.Fatalf("Failed to set XDG_CONFIG_HOME: %v", err)
+	}
+	defer func() {
+		if err := os.Unsetenv("XDG_CONFIG_HOME"); err != nil {
+			t.Logf("Failed to unset XDG_CONFIG_HOME: %v", err)
+		}
+	}()
 
 	// Init git repo
 	client := git.NewClient()
@@ -34,8 +44,12 @@ func TestSyncLocalChanges(t *testing.T) {
 	}
 
 	// Configure git user locally for this test repo
-	exec.Command("git", "-C", storeDir, "config", "user.name", "Test User").Run()
-	exec.Command("git", "-C", storeDir, "config", "user.email", "test@example.com").Run()
+	if err := exec.Command("git", "-C", storeDir, "config", "user.name", "Test User").Run(); err != nil {
+		t.Fatalf("Failed to set git user.name: %v", err)
+	}
+	if err := exec.Command("git", "-C", storeDir, "config", "user.email", "test@example.com").Run(); err != nil {
+		t.Fatalf("Failed to set git user.email: %v", err)
+	}
 
 	// Create a test file
 	testFile := filepath.Join(storeDir, "test.txt")

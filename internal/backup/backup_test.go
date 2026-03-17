@@ -20,7 +20,9 @@ func TestCreateSnapshot(t *testing.T) {
 	// Mock config
 	cfg := config.DefaultConfig()
 	cfg.LocalPath = filepath.Join(tempDir, "store")
-	os.MkdirAll(cfg.LocalPath, 0755)
+	if err := os.MkdirAll(cfg.LocalPath, 0755); err != nil {
+		t.Fatalf("Failed to create local path: %v", err)
+	}
 
 	// Create dummy file
 	dummyFile := filepath.Join(tempDir, "test.txt")
@@ -78,7 +80,9 @@ func TestCleanOldBackups(t *testing.T) {
 	cfg.Settings.HousekeepingMaxBackups = 2
 
 	backupsDir := filepath.Join(cfg.LocalPath, ".backups")
-	os.MkdirAll(backupsDir, 0755)
+	if err := os.MkdirAll(backupsDir, 0755); err != nil {
+		t.Fatalf("Failed to create backups dir: %v", err)
+	}
 
 	// Create 4 dummy backups
 	dirs := []string{"20260101_000000", "20260102_000000", "20260103_000000", "20260104_000000"}
@@ -111,12 +115,16 @@ func TestListBackups(t *testing.T) {
 	cfg := config.DefaultConfig()
 	cfg.LocalPath = filepath.Join(tempDir, "store")
 	backupsDir := filepath.Join(cfg.LocalPath, ".backups")
-	os.MkdirAll(backupsDir, 0755)
+	if err := os.MkdirAll(backupsDir, 0755); err != nil {
+		t.Fatalf("Failed to create backups dir: %v", err)
+	}
 
 	// Create 3 dummy backups
 	dirs := []string{"20260101_000000", "20260102_000000", "20260103_000000"}
 	for _, d := range dirs {
-		os.MkdirAll(filepath.Join(backupsDir, d), 0755)
+		if err := os.MkdirAll(filepath.Join(backupsDir, d), 0755); err != nil {
+			t.Fatalf("Failed to create backup dir %s: %v", d, err)
+		}
 	}
 
 	backups, err := ListBackups(&cfg)
@@ -178,9 +186,15 @@ func TestCheckIfPathInStore(t *testing.T) {
 	_ = os.MkdirAll(cfg.LocalPath, 0755)
 
 	// Create some files in store
-	os.WriteFile(filepath.Join(cfg.LocalPath, "file1.txt"), []byte("data1"), 0644)
-	os.MkdirAll(filepath.Join(cfg.LocalPath, "subdir"), 0755)
-	os.WriteFile(filepath.Join(cfg.LocalPath, "subdir", "file2.txt"), []byte("data2"), 0644)
+	if err := os.WriteFile(filepath.Join(cfg.LocalPath, "file1.txt"), []byte("data1"), 0644); err != nil {
+		t.Fatalf("Failed to write file1.txt: %v", err)
+	}
+	if err := os.MkdirAll(filepath.Join(cfg.LocalPath, "subdir"), 0755); err != nil {
+		t.Fatalf("Failed to create subdir: %v", err)
+	}
+	if err := os.WriteFile(filepath.Join(cfg.LocalPath, "subdir", "file2.txt"), []byte("data2"), 0644); err != nil {
+		t.Fatalf("Failed to write file2.txt: %v", err)
+	}
 
 	// Test existing file
 	if !CheckIfPathInStore(&cfg, filepath.Join(cfg.LocalPath, "file1.txt")) {
