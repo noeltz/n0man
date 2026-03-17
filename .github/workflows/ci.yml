@@ -28,13 +28,7 @@ jobs:
       run: go vet ./...
 
     - name: Test
-      run: go test ./... -v -covermode=atomic -coverprofile=coverage.out
-
-    - name: Check coverage
-      run: |
-        COVERAGE=$(go tool cover -func=coverage.out | grep '^total:' | awk '{print $3}')
-        echo "Coverage: $COVERAGE"
-        # Just print coverage, don't fail
+      run: go test ./... -v
 
   lint:
     runs-on: ubuntu-latest
