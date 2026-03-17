@@ -22,7 +22,7 @@ func TestSyncLocalChanges(t *testing.T) {
 	cfg := config.DefaultConfig()
 	cfg.LocalPath = storeDir
 	// Note: No remote URL set for this test
-	cfg.Save(cfgPath)
+	_ = cfg.Save(cfgPath)
 
 	os.Setenv("XDG_CONFIG_HOME", filepath.Dir(cfgDir))
 	defer os.Unsetenv("XDG_CONFIG_HOME")

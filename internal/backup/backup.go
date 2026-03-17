@@ -40,7 +40,7 @@ func CreateSnapshotWithContext(ctx context.Context, cfg *config.Config) (string,
 		select {
 		case <-ctx.Done():
 			// Clean up partial backup
-			os.RemoveAll(backupDir)
+			_ = os.RemoveAll(backupDir)
 			return "", ctx.Err()
 		default:
 		}

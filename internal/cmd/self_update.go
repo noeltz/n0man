@@ -24,7 +24,7 @@ var selfUpdateCmd = &cobra.Command{
 		// Check if Go is installed
 		goPath, err := exec.LookPath("go")
 		if err != nil {
-			return fmt.Errorf("Go is not installed or not in PATH. Cannot self-update.\nInstall Go from https://go.dev/dl/ or update manually")
+			return fmt.Errorf("go is not installed or not in PATH. Cannot self-update\nInstall Go from https://go.dev/dl/ or update manually")
 		}
 		fmt.Printf("  Using Go at: %s\n", goPath)
 

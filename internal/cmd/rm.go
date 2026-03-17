@@ -52,13 +52,13 @@ var rmCmd = &cobra.Command{
 				}
 
 				if suggestion != "" {
-					return fmt.Errorf("dotfile '%s' is not tracked\n\nDid you mean '%s'?\n\nTracked dotfiles:\n  %s\n\nOr use 'n0man add' to track a new file.", name, suggestion, strings.Join(names, "\n  "))
+					return fmt.Errorf("dotfile '%s' is not tracked\n\nDid you mean '%s'\n\nTracked dotfiles:\n  %s\n\nOr use 'n0man add' to track a new file", name, suggestion, strings.Join(names, "\n  "))
 				}
 
-				return fmt.Errorf("dotfile '%s' is not tracked\n\nTracked dotfiles:\n  %s\n\nOr use 'n0man add' to track a new file.", name, strings.Join(names, "\n  "))
+				return fmt.Errorf("dotfile '%s' is not tracked\n\nTracked dotfiles:\n  %s\n\nOr use 'n0man add' to track a new file", name, strings.Join(names, "\n  "))
 			}
 
-			return fmt.Errorf("dotfile '%s' is not tracked\n\nNo dotfiles are currently tracked.\n\nUse 'n0man add <path>' to track your first dotfile.", name)
+			return fmt.Errorf("dotfile '%s' is not tracked\n\nNo dotfiles are currently tracked\n\nUse 'n0man add <path>' to track your first dotfile", name)
 		}
 
 		homeDir, _ := os.UserHomeDir()

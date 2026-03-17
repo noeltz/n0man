@@ -24,7 +24,7 @@ func TestCreateSnapshot(t *testing.T) {
 
 	// Create dummy file
 	dummyFile := filepath.Join(tempDir, "test.txt")
-	os.WriteFile(dummyFile, []byte("original content"), 0644)
+	_ = os.WriteFile(dummyFile, []byte("original content"), 0644)
 
 	cfg.SetPath("test.txt", dummyFile)
 
@@ -48,10 +48,10 @@ func TestCreateSnapshot(t *testing.T) {
 	// 2. Modify original and mock symlink (how n0man works)
 	// move original to store, and symlink it
 	storeFile := filepath.Join(cfg.LocalPath, "test.txt")
-	system.MovePath(dummyFile, storeFile)
-	system.CreateSymlink(storeFile, dummyFile)
+	_ = system.MovePath(dummyFile, storeFile)
+	_ = system.CreateSymlink(storeFile, dummyFile)
 
-	os.WriteFile(storeFile, []byte("changed content"), 0644)
+	_ = os.WriteFile(storeFile, []byte("changed content"), 0644)
 
 	// 3. Create second backup (should backup resolved symlink or the store file)
 	ts2, err := CreateSnapshot(&cfg)
@@ -83,7 +83,7 @@ func TestCleanOldBackups(t *testing.T) {
 	// Create 4 dummy backups
 	dirs := []string{"20260101_000000", "20260102_000000", "20260103_000000", "20260104_000000"}
 	for _, d := range dirs {
-		os.MkdirAll(filepath.Join(backupsDir, d), 0755)
+		_ = os.MkdirAll(filepath.Join(backupsDir, d), 0755)
 		// sleep a tiny bit just in case, though name sorting applies
 		time.Sleep(1 * time.Millisecond)
 	}
@@ -142,16 +142,16 @@ func TestRestoreBackup(t *testing.T) {
 
 	cfg := config.DefaultConfig()
 	cfg.LocalPath = filepath.Join(tempDir, "store")
-	os.MkdirAll(cfg.LocalPath, 0755)
+	_ = os.MkdirAll(cfg.LocalPath, 0755)
 
 	// Create a backup with a file
 	backupTime := "20260101_120000"
 	backupDir := filepath.Join(cfg.LocalPath, ".backups", backupTime)
-	os.MkdirAll(backupDir, 0755)
+	_ = os.MkdirAll(backupDir, 0755)
 
 	testFile := "config.txt"
 	backupFile := filepath.Join(backupDir, testFile)
-	os.WriteFile(backupFile, []byte("backup content"), 0644)
+	_ = os.WriteFile(backupFile, []byte("backup content"), 0644)
 
 	// Restore
 	err := RestoreBackup(&cfg, backupTime)
@@ -175,7 +175,7 @@ func TestCheckIfPathInStore(t *testing.T) {
 
 	cfg := config.DefaultConfig()
 	cfg.LocalPath = filepath.Join(tempDir, "store")
-	os.MkdirAll(cfg.LocalPath, 0755)
+	_ = os.MkdirAll(cfg.LocalPath, 0755)
 
 	// Create some files in store
 	os.WriteFile(filepath.Join(cfg.LocalPath, "file1.txt"), []byte("data1"), 0644)

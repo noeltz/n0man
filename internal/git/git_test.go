@@ -17,8 +17,8 @@ func TestOSClientInitAndCommit(t *testing.T) {
 	}
 
 	// Configure git user locally for this test repo
-	exec.Command("git", "-C", tempDir, "config", "user.name", "Test User").Run()
-	exec.Command("git", "-C", tempDir, "config", "user.email", "test@example.com").Run()
+	_ = exec.Command("git", "-C", tempDir, "config", "user.name", "Test User").Run()
+	_ = exec.Command("git", "-C", tempDir, "config", "user.email", "test@example.com").Run()
 
 	dummyFile := filepath.Join(tempDir, "test.txt")
 	err = os.WriteFile(dummyFile, []byte("hello"), 0644)

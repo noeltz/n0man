@@ -24,8 +24,11 @@ var scanCmd = &cobra.Command{
 			return err
 		}
 		cfg, err := config.Load(cfgPath)
+		if err != nil && err != config.ErrConfigNotFound {
+			return err
+		}
 
-		scanPath := ""
+		var scanPath string
 		if len(args) > 0 {
 			scanPath = args[0]
 		} else if cfg != nil && cfg.LocalPath != "" {

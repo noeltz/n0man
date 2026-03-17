@@ -96,7 +96,7 @@ func runDoctorChecks(cfgPath string, cfg *config.Config, homeDir string) []Docto
 				Description: fmt.Sprintf("%s: Wrong symlink target", name),
 				CanFix:      true,
 				FixFunc: func() error {
-					os.Remove(realTarget)
+					_ = os.Remove(realTarget)
 					return os.Symlink(storePath, realTarget)
 				},
 			})

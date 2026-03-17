@@ -152,22 +152,22 @@ var syncCmd = &cobra.Command{
 							keepLocal = false
 							ui.PrintStep("Conflict strategy: Keeping remote changes...")
 						case "abort":
-							client.AbortRebase(cfg.LocalPath)
+							_ = client.AbortRebase(cfg.LocalPath)
 							return fmt.Errorf("conflict detected, sync aborted as per --conflict-strategy=abort")
 						default:
-							client.AbortRebase(cfg.LocalPath)
+							_ = client.AbortRebase(cfg.LocalPath)
 							return fmt.Errorf("invalid --conflict-strategy value: %s (use: keep-local, keep-remote, abort)", conflictStrategy)
 						}
 
 						if err := client.ResolveConflict(cfg.LocalPath, keepLocal); err != nil {
 							return fmt.Errorf("failed to resolve: %w", err)
 						}
-						client.ContinueRebase(cfg.LocalPath)
+						_ = client.ContinueRebase(cfg.LocalPath)
 					} else {
 						// Interactive mode - use TUI
 						res, pErr := conflict.PromptConflictResolution()
 						if pErr != nil {
-							client.AbortRebase(cfg.LocalPath)
+							_ = client.AbortRebase(cfg.LocalPath)
 							return fmt.Errorf("conflict resolution aborted: %w", pErr)
 						}
 
@@ -177,15 +177,15 @@ var syncCmd = &cobra.Command{
 							if err := client.ResolveConflict(cfg.LocalPath, true); err != nil {
 								return fmt.Errorf("failed to resolve: %w", err)
 							}
-							client.ContinueRebase(cfg.LocalPath)
+							_ = client.ContinueRebase(cfg.LocalPath)
 						case conflict.KeepRemote:
 							ui.PrintStep("Resolving: Keeping remote changes...")
 							if err := client.ResolveConflict(cfg.LocalPath, false); err != nil {
 								return fmt.Errorf("failed to resolve: %w", err)
 							}
-							client.ContinueRebase(cfg.LocalPath)
+							_ = client.ContinueRebase(cfg.LocalPath)
 						case conflict.AbortAndManual:
-							client.AbortRebase(cfg.LocalPath)
+							_ = client.AbortRebase(cfg.LocalPath)
 							return fmt.Errorf("sync aborted. Please resolve conflicts manually in %s", cfg.LocalPath)
 						}
 					}

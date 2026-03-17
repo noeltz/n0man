@@ -34,8 +34,7 @@ func (m model) Init() tea.Cmd {
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	switch msg := msg.(type) {
-	case tea.KeyMsg:
+	if msg, ok := msg.(tea.KeyMsg); ok {
 		switch msg.String() {
 		case "ctrl+c", "q", "esc":
 			m.quitting = true
@@ -69,9 +68,8 @@ func (m model) View() string {
 	s += ui.MutedStyle.Render("  Choose how to resolve the conflict in the repository:\n\n")
 
 	for i, choice := range m.choices {
-		cursor := " "
 		if m.cursor == i {
-			cursor = ui.PrimaryStyle.Render(">")
+			cursor := ui.PrimaryStyle.Render(">")
 			s += fmt.Sprintf("  %s %s\n", cursor, ui.Bold.Render(choice))
 		} else {
 			s += fmt.Sprintf("    %s\n", ui.MutedStyle.Render(choice))

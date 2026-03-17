@@ -55,14 +55,14 @@ func NewClient() Client {
 // It rejects URLs with shell metacharacters that could lead to command injection
 func validateGitURL(gitURL string) error {
 	if gitURL == "" {
-		return fmt.Errorf("Git URL cannot be empty")
+		return fmt.Errorf("git URL cannot be empty")
 	}
 
 	// Reject URLs with shell metacharacters that could be exploited
 	shellMetachars := []string{";", "|", "&", "$", "`", "\\", "!", "{", "}", "<", ">", "(", ")", "\n", "\r"}
 	for _, char := range shellMetachars {
 		if strings.Contains(gitURL, char) {
-			return fmt.Errorf("Git URL contains invalid character: %s", char)
+			return fmt.Errorf("git URL contains invalid character: %s", char)
 		}
 	}
 
@@ -76,7 +76,7 @@ func validateGitURL(gitURL string) error {
 		// Validate it's a clean path
 		cleanPath := filepath.Clean(gitURL)
 		if strings.HasPrefix(cleanPath, "..") {
-			return fmt.Errorf("Git URL path cannot contain parent directory references")
+			return fmt.Errorf("git URL path cannot contain parent directory references")
 		}
 	}
 

@@ -39,7 +39,7 @@ func configureGitUser(repoPath string, isLocalOnly bool) error {
 	}
 
 	// Remote mode: return error to trigger prompt
-	return fmt.Errorf("Git user not configured")
+	return fmt.Errorf("git user not configured")
 }
 
 // promptGitSetup interactively sets up git user.name and user.email

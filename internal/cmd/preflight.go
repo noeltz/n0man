@@ -131,7 +131,7 @@ func RunPreflightChecks(cfg *config.Config, homeDir string) []PreflightCheckResu
 						storePath := filepath.Join(cfg.LocalPath, name)
 
 						// Remove existing file/symlink
-						os.Remove(realTarget)
+						_ = os.Remove(realTarget)
 
 						// Recreate symlink
 						if err := os.Symlink(storePath, realTarget); err != nil {

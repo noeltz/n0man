@@ -50,7 +50,8 @@ func runStoreRecovery(cfg *config.Config, cfgPath string) error {
 	}
 
 	// Execute chosen recovery
-	if hasBackups && choice == 0 {
+	switch {
+	case hasBackups && choice == 0:
 		// Restore from backup
 		restoreChoice, err := ui.SelectPrompt("Choose a backup to restore:", backups)
 		if err != nil || restoreChoice < 0 {
@@ -71,7 +72,7 @@ func runStoreRecovery(cfg *config.Config, cfgPath string) error {
 
 		ui.PrintSuccess("Store restored from backup")
 
-	} else if hasRemote && ((hasBackups && choice == 1) || (!hasBackups && choice == 0)) {
+	case hasRemote && ((hasBackups && choice == 1) || (!hasBackups && choice == 0)):
 		// Re-clone from remote
 		ui.PrintStep(fmt.Sprintf("Cloning %s → %s", cfg.RemoteURL, cfg.LocalPath))
 
@@ -82,7 +83,7 @@ func runStoreRecovery(cfg *config.Config, cfgPath string) error {
 
 		ui.PrintSuccess("Store re-cloned from remote")
 
-	} else {
+	default:
 		// Reinitialize
 		ui.PrintStep("Initializing fresh store")
 
@@ -99,8 +100,8 @@ func runStoreRecovery(cfg *config.Config, cfgPath string) error {
 		cmd := exec.Command("git", "config", "user.name")
 		cmd.Dir = cfg.LocalPath
 		if out, _ := cmd.Output(); len(out) == 0 {
-			exec.Command("git", "config", "user.name", "n0man").Run()
-			exec.Command("git", "config", "user.email", "n0man@localhost").Run()
+			_ = exec.Command("git", "config", "user.name", "n0man").Run()
+			_ = exec.Command("git", "config", "user.email", "n0man@localhost").Run()
 		}
 
 		ui.PrintSuccess("Store reinitialized")
@@ -126,7 +127,7 @@ func runStoreRecovery(cfg *config.Config, cfgPath string) error {
 		}
 
 		// Remove existing symlink if present
-		os.Remove(realTarget)
+		_ = os.Remove(realTarget)
 
 		// Create symlink
 		if err := os.Symlink(storePath, realTarget); err != nil {

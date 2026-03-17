@@ -37,9 +37,9 @@ var listCmd = &cobra.Command{
 
 		// Header
 		header := lipgloss.JoinHorizontal(lipgloss.Top,
-			nameStyle.Copy().Foreground(ui.Primary).Render("NAME"),
-			pathStyle.Copy().Foreground(ui.Primary).Render("TARGET PATH"),
-			ignoreStyle.Copy().Foreground(ui.Primary).Render("IGNORES"),
+			lipgloss.NewStyle().Bold(true).Foreground(ui.Primary).Width(20).Render("NAME"),
+			lipgloss.NewStyle().Foreground(ui.Primary).Width(35).Render("TARGET PATH"),
+			lipgloss.NewStyle().Foreground(ui.Primary).Render("IGNORES"),
 		)
 		fmt.Println("  " + header)
 		fmt.Println("  " + ui.Divider.Render())

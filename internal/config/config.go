@@ -309,7 +309,7 @@ func cleanupOldBackups(configPath string, keep int) {
 	// Remove oldest backups beyond the keep limit
 	if len(backups) > keep {
 		for i := 0; i < len(backups)-keep; i++ {
-			os.Remove(filepath.Join(dir, backups[i]))
+			_ = os.Remove(filepath.Join(dir, backups[i]))
 		}
 	}
 }

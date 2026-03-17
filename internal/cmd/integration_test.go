@@ -24,7 +24,7 @@ func TestAddListRmFlow(t *testing.T) {
 	cfgPath := filepath.Join(cfgDir, "n0man.toml")
 	cfg := config.DefaultConfig()
 	cfg.LocalPath = storeDir
-	cfg.Save(cfgPath)
+	_ = cfg.Save(cfgPath)
 
 	// Mock XDG paths to point to temp dir
 	os.Setenv("XDG_CONFIG_HOME", configHome)
@@ -72,11 +72,11 @@ func TestAddListRmFlow(t *testing.T) {
 		t.Fatalf("List command failed: %v", err)
 	}
 
-	w.Close()
+	_ = w.Close()
 	os.Stdout = oldStdout
 
 	var stdout bytes.Buffer
-	stdout.ReadFrom(r)
+	_, _ = stdout.ReadFrom(r)
 
 	if !strings.Contains(stdout.String(), "dummy.txt") {
 		t.Errorf("List output missing 'dummy.txt'. Got: %v", stdout.String())
