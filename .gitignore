@@ -30,6 +30,8 @@ e2e-test-report.md
 # Test artifacts
 test-backup-test/
 *.backup.*
+*.bak
+n0man-linux-*
 
 # Temporary files
 tmp/
