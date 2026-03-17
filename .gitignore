@@ -1,0 +1,36 @@
+# n0man - Dotfiles Manager
+# https://github.com/noeltz/n0man
+
+# Binaries (root level only)
+/n0man
+/build/
+
+# Go
+*.test
+coverage.out
+*.out
+
+# IDE and Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local development files
+# (These are project-specific and should not be in repo)
+package.json
+opencode.json
+e2e-test-report.md
+
+# Test artifacts
+test-backup-test/
+*.backup.*
+
+# Temporary files
+tmp/
+temp/
